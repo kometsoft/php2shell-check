@@ -7,12 +7,12 @@ One Bash file. No dependencies beyond coreutils and your package manager. Works 
 ## Install
 
 ```bash
-wget -O php2shell-check.sh https://raw.githubusercontent.com/kometsoft/php2shell-check-/main/php2shell-check.sh
+wget -O php2shell-check.sh https://raw.githubusercontent.com/kometsoft/php2shell-check/main/php2shell-check.sh
 chmod +x php2shell-check.sh
 sudo ./php2shell-check.sh
 ```
 
-`curl -fsSLO https://raw.githubusercontent.com/kometsoft/php2shell-check-/main/php2shell-check.sh` works too. Read the script before running it as root; it is about 600 lines of plain Bash.
+`curl -fsSLO https://raw.githubusercontent.com/kometsoft/php2shell-check/main/php2shell-check.sh` works too. Read the script before running it as root; it is about 600 lines of plain Bash.
 
 Exit codes: `0` everything patched, `1` something vulnerable, unknown, or still running old code, `2` usage or runtime error.
 
