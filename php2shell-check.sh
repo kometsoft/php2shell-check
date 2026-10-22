@@ -30,7 +30,7 @@ for arg in "$@"; do
   esac
 done
 
-# Upstream fixed versions, php.net 2026-10-21.
+# Upstream fixed versions, php.net 2026-10-21. Vendor tables re-checked 2026-10-22.
 FIXED_85="8.5.12"
 FIXED_84="8.4.27"
 FIXED_83="8.3.36"
@@ -46,8 +46,9 @@ UBUNTU_FIXED_php7_2="7.2.24-0ubuntu0.18.04.17+esm14"
 UBUNTU_FIXED_php7_0="7.0.33-0ubuntu0.16.04.16+esm22"
 UBUNTU_FIXED_php5="5.5.9+dfsg-1ubuntu4.29+esm18"
 
-# Debian fixed package versions, DSA-6574-1.
+# Debian fixed package versions, DSA-6574-1 (trixie) and DLA-4848-1 (bookworm).
 DEBIAN_FIXED_php8_4_trixie="8.4.27-1~deb13u1"
+DEBIAN_FIXED_php8_2_bookworm="8.2.35-1~deb12u1"
 
 SURY_FIX_DATE="20261021"
 MARK_BEGIN="# php2shell-mitigation-begin"
@@ -221,7 +222,10 @@ verdict_debian() {
     php8.4*|libapache2-mod-php8.4)
       if dpkg --compare-versions "$pkgver" ge "$DEBIAN_FIXED_php8_4_trixie"; then echo "PATCHED|$pkgver >= $DEBIAN_FIXED_php8_4_trixie (DSA-6574-1)"
       else echo "VULNERABLE|$pkgver < $DEBIAN_FIXED_php8_4_trixie (DSA-6574-1)"; fi ;;
-    *) echo "UNKNOWN|no Debian fixed version known for $pkg; bookworm fix pending at time of writing" ;;
+    php8.2*|libapache2-mod-php8.2)
+      if dpkg --compare-versions "$pkgver" ge "$DEBIAN_FIXED_php8_2_bookworm"; then echo "PATCHED|$pkgver >= $DEBIAN_FIXED_php8_2_bookworm (DLA-4848-1)"
+      else echo "VULNERABLE|$pkgver < $DEBIAN_FIXED_php8_2_bookworm (DLA-4848-1)"; fi ;;
+    *) echo "UNKNOWN|no Debian fixed version known for $pkg; check security-tracker.debian.org/tracker/CVE-2026-109618" ;;
   esac
 }
 
@@ -252,9 +256,9 @@ verdict_rpm() {
   fixed=$(fixed_upstream_for_branch "$branch")
   if [ -n "$fixed" ] && version_ge "$upstream" "$fixed"; then echo "PATCHED|$upstream >= $fixed"; return; fi
   if [ "$source" = "rhel" ]; then
-    echo "VULNERABLE|no CVE in rpm changelog; dnf upgrade 'php*' (RHSA-2026:87072 php:8.2 el9, 87079 php:8.3 el9, 87080 php:7.4 el8; other streams track RHSB-2026-013)"
+    echo "VULNERABLE|no CVE in rpm changelog; dnf upgrade 'php*' (RHSA-2026:87072 php:8.2 el9, 87079 php:8.3 el9, 87151 php 8.0 el9, 87080 php:7.4 el8, 87070 php el10, 87071 php8.4 el10; el9 php:8.4/php:8.1 and el8 php:8.0/php:8.2 track RHSB-2026-013)"
   else
-    echo "VULNERABLE|$upstream < ${fixed:-no upstream fix for $branch}; dnf upgrade 'php*' from Remi, or move to AppStream"
+    echo "VULNERABLE|$upstream < ${fixed:-no upstream fix for $branch}; dnf upgrade 'php*' from Remi (8.1 backport is 8.1.34-6, CVEs in changelog), or move to AppStream"
   fi
 }
 

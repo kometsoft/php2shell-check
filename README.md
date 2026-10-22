@@ -96,7 +96,7 @@ Ubuntu's unattended-upgrades does **not** cover this PPA. Nothing patched itself
 
 ### RHEL / Alma / Rocky, AppStream modules (partial)
 
-Red Hat shipped php:8.2 and php:8.3 on RHEL 9 and php:7.4 on RHEL 8 on 21 Oct. php:8.4, php:8.1 and RHEL 10 were still pending at time of writing. Alma and Rocky rebuild after Red Hat.
+Red Hat shipped on 21 Oct: RHEL 9 php:8.2 (RHSA-2026:87072), php:8.3 (87079) and base php 8.0 (87151); RHEL 8 php:7.4 (87080); RHEL 10 php 8.3 (87070) and php8.4 (87071). Still pending on 22 Oct: RHEL 9 php:8.4 and php:8.1, RHEL 8 php:8.0 and php:8.2. Alma and Rocky had not rebuilt yet on 22 Oct.
 
 ```bash
 sudo dnf upgrade 'php*'
@@ -107,7 +107,7 @@ Stream not fixed yet? Apply the interim mitigations below, or move the stream to
 
 ### Remi, or built from source (manual)
 
-Remi: `dnf upgrade 'php*'`, then `php -v` must show the fixed version. Source builds: rebuild from the php.net tarball with your existing configure flags.
+Remi: `dnf upgrade 'php*'`, then `php -v` must show the fixed version. Remi also carries a backported 8.1.34-6 (21 Oct) whose changelog lists both CVEs. Source builds: rebuild from the php.net tarball with your existing configure flags.
 
 ```bash
 # 8.2 to 8.5: https://www.php.net/downloads.php
@@ -215,7 +215,7 @@ Tested in Docker against Ubuntu 24.04 (distro php8.3-fpm + mod_php), Ubuntu 22.0
 
 - Needs root. Inside containers without systemd the restart step is a no-op; recreate the container.
 - LiteSpeed and FrankenPHP version detection is best-effort.
-- Fixed-version tables are a snapshot of 21 Oct 2026. The changelog check keeps working after later updates; the version-compare fallback would need new numbers.
+- Fixed-version tables are a snapshot of 21 Oct 2026, re-checked against vendor pages on 22 Oct 2026. The changelog check keeps working after later updates; the version-compare fallback would need new numbers.
 - It reports. It does not rotate secrets or hunt for web shells.
 
 ## Sources
